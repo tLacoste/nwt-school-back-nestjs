@@ -4,7 +4,7 @@ export interface Person {
   firstname: string;
   lastname: string;
   entity: string;
-  birthDate: string;
+  birthDate: number;
   email: string;
   phone: string;
   address: Address;
