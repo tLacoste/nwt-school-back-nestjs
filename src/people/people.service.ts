@@ -5,6 +5,7 @@ import { find, findIndex, map, mergeMap, tap } from 'rxjs/operators';
 import { PEOPLE } from '../data/people';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
+import { PersonEntity } from './entities/person.entity';
 
 @Injectable()
 export class PeopleService {
@@ -23,24 +24,24 @@ export class PeopleService {
   /**
    * Returns all existing people in the list
    *
-   * @returns {Observable<Person[] | void>}
+   * @returns {Observable<PersonEntity[] | void>}
    */
-  findAll(): Observable<Person[] | void> {
+  findAll(): Observable<PersonEntity[] | void> {
     return of(this._people)
       .pipe(
-        map(_ => (!!_ && !!_.length) ? _ : undefined),
+        map(_ => (!!_ && !!_.length) ? _.map(__ => new PersonEntity(__)) : undefined),
       );
   }
 
   /**
    * Returns randomly one person of the list
    *
-   * @returns {Observable<Person | void>}
+   * @returns {Observable<PersonEntity | void>}
    */
-  findRandom(): Observable<Person | void> {
+  findRandom(): Observable<PersonEntity | void> {
     return of(this._people[ Math.round(Math.random() * this._people.length) ])
       .pipe(
-        map(_ => !!_ ? _ : undefined),
+        map(_ => !!_ ? new PersonEntity(_) : undefined),
       );
   }
 
@@ -49,15 +50,15 @@ export class PeopleService {
    *
    * @param {string} id of the person
    *
-   * @returns {Observable<Person>}
+   * @returns {Observable<PersonEntity>}
    */
-  findOne(id: string): Observable<Person> {
+  findOne(id: string): Observable<PersonEntity> {
     return from(this._people)
       .pipe(
         find(_ => _.id === id),
         mergeMap(_ =>
           !!_ ?
-            of(_) :
+            of(new PersonEntity(_)) :
             throwError(new NotFoundException(`People with id '${id}' not found`)),
         ),
       );
@@ -68,9 +69,9 @@ export class PeopleService {
    *
    * @param person to create
    *
-   * @returns {Observable<Person>}
+   * @returns {Observable<PersonEntity>}
    */
-  create(person: CreatePersonDto): Observable<Person> {
+  create(person: CreatePersonDto): Observable<PersonEntity> {
     return from(this._people)
       .pipe(
         find(_ => _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
@@ -91,13 +92,13 @@ export class PeopleService {
    * @param {string} id of the person to update
    * @param person data to update
    *
-   * @returns {Observable<Person>}
+   * @returns {Observable<PersonEntity>}
    */
-  update(id: string, person: UpdatePersonDto): Observable<Person> {
+  update(id: string, person: UpdatePersonDto): Observable<PersonEntity> {
     return this._findPeopleIndexOfList(id)
       .pipe(
         tap(_ => Object.assign(this._people[ _ ], person)),
-        map(_ => this._people[ _ ]),
+        map(_ => new PersonEntity(this._people[ _ ])),
       );
   }
 
@@ -141,11 +142,11 @@ export class PeopleService {
    *
    * @param person to add
    *
-   * @returns {Observable<Person>}
+   * @returns {Observable<PersonEntity>}
    *
    * @private
    */
-  private _addPerson(person: CreatePersonDto): Observable<Person> {
+  private _addPerson(person: CreatePersonDto): Observable<PersonEntity> {
     return of(person)
       .pipe(
         map(_ =>
@@ -156,6 +157,7 @@ export class PeopleService {
           }) as Person,
         ),
         tap(_ => this._people = this._people.concat(_)),
+        map(_ => new PersonEntity(_)),
       );
   }
 

@@ -1,13 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from '@nestjs/common';
-import { Person } from './interfaces/person.interface';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from '@nestjs/common';
 import { PeopleService } from './people.service';
 import { PeopleInterceptor } from './interceptors/people.interceptor';
 import { Observable } from 'rxjs';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { HandlerParams } from './validators/handler-params';
+import { PersonEntity } from './entities/person.entity';
 
 @Controller('people')
+@UseInterceptors(ClassSerializerInterceptor)
 @UseInterceptors(PeopleInterceptor)
 export class PeopleController {
   /**
@@ -20,20 +21,20 @@ export class PeopleController {
   /**
    * Handler to answer to GET /people route
    *
-   * @returns Observable<Person[] | void>
+   * @returns Observable<PersonEntity[] | void>
    */
   @Get()
-  findAll(): Observable<Person[] | void> {
+  findAll(): Observable<PersonEntity[] | void> {
     return this._peopleService.findAll();
   }
 
   /**
    * Handler to answer to GET /people/random route
    *
-   * @returns Observable<Person | void>
+   * @returns Observable<PersonEntity | void>
    */
   @Get('random')
-  findRandom(): Observable<Person | void> {
+  findRandom(): Observable<PersonEntity | void> {
     return this._peopleService.findRandom();
   }
 
@@ -42,10 +43,10 @@ export class PeopleController {
    *
    * @param {HandlerParams} params list of route params to take person id
    *
-   * @returns Observable<Person>
+   * @returns Observable<PersonEntity>
    */
   @Get(':id')
-  findOne(@Param() params: HandlerParams): Observable<Person> {
+  findOne(@Param() params: HandlerParams): Observable<PersonEntity> {
     return this._peopleService.findOne(params.id);
   }
 
@@ -54,10 +55,10 @@ export class PeopleController {
    *
    * @param createPersonDto data to create
    *
-   * @returns Observable<Person>
+   * @returns Observable<PersonEntity>
    */
   @Post()
-  create(@Body() createPersonDto: CreatePersonDto): Observable<Person> {
+  create(@Body() createPersonDto: CreatePersonDto): Observable<PersonEntity> {
     return this._peopleService.create(createPersonDto);
   }
 
@@ -67,10 +68,10 @@ export class PeopleController {
    * @param {HandlerParams} params list of route params to take person id
    * @param updatePersonDto data to update
    *
-   * @returns Observable<Person>
+   * @returns Observable<PersonEntity>
    */
   @Put(':id')
-  update(@Param() params: HandlerParams, @Body() updatePersonDto: UpdatePersonDto): Observable<Person> {
+  update(@Param() params: HandlerParams, @Body() updatePersonDto: UpdatePersonDto): Observable<PersonEntity> {
     return this._peopleService.update(params.id, updatePersonDto);
   }
 
