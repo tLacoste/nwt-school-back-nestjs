@@ -22,6 +22,7 @@ export class PeopleInterceptor implements NestInterceptor {
     const cls = context.getClass();
     const handler = context.getHandler();
     const response: FastifyReply = context.switchToHttp().getResponse<FastifyReply>();
+    const logCtx = `PeopleInterceptor => ${cls.name}.${handler.name}`;
 
     return next.handle()
       .pipe(
@@ -40,7 +41,10 @@ export class PeopleInterceptor implements NestInterceptor {
                 map(_ => _),
               ),
           )),
-        tap(_ => this._logger.log(!!_ ? _ : 'NO CONTENT', `PeopleInterceptor => ${cls.name}.${handler.name}`)),
+        tap(
+          _ => this._logger.log(!!_ ? _ : 'NO CONTENT', logCtx),
+          _ => this._logger.error(_.message, JSON.stringify(_), logCtx),
+        ),
       );
   }
 }
