@@ -1,9 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { from, Observable, of, throwError } from 'rxjs';
 import { Person } from './interfaces/person.interface';
-import { find, map, mergeMap, tap } from 'rxjs/operators';
+import { find, findIndex, map, mergeMap, tap } from 'rxjs/operators';
 import { PEOPLE } from '../data/people';
 import { CreatePersonDto } from './dto/create-person.dto';
+import { UpdatePersonDto } from './dto/update-person.dto';
 
 @Injectable()
 export class PeopleService {
@@ -80,6 +81,42 @@ export class PeopleService {
               new ConflictException(`People with lastname '${person.lastname}' and firstname '${person.firstname}' already exists`),
             ) :
             this._addPerson(person),
+        ),
+      );
+  }
+
+  /**
+   * Update a person in people list
+   *
+   * @param {string} id of the person to update
+   * @param person data to update
+   *
+   * @returns {Observable<Person>}
+   */
+  update(id: string, person: UpdatePersonDto): Observable<Person> {
+    return this._findPeopleIndexOfList(id)
+      .pipe(
+        tap(_ => Object.assign(this._people[ _ ], person)),
+        map(_ => this._people[ _ ]),
+      );
+  }
+
+  /**
+   * Finds index of array for current person
+   *
+   * @param {string} id of the person to find
+   *
+   * @returns {Observable<number>}
+   *
+   * @private
+   */
+  private _findPeopleIndexOfList(id: string): Observable<number> {
+    return from(this._people)
+      .pipe(
+        findIndex(_ => _.id === id),
+        mergeMap(_ => _ > -1 ?
+          of(_) :
+          throwError(new NotFoundException(`People with id '${id}' not found`)),
         ),
       );
   }
