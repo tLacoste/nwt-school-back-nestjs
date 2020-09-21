@@ -7,7 +7,7 @@ export const PEOPLE = [
     entity: 'BIOSPAN',
     birthDate: '02/01/1974',
     email: 'Leanne.Woodard@BIOSPAN.com',
-    phone: '0784112248',
+    phone: '+33784112248',
     address: {
       street: 'Narrows Avenue',
       postalCode: '70534',
@@ -25,7 +25,7 @@ export const PEOPLE = [
     entity: 'METROZ',
     birthDate: '22/01/1963',
     email: 'Castaneda.Salinas@METROZ.com',
-    phone: '0145652522',
+    phone: '+33145652522',
     address: {
       street: 'Metrotech Courtr',
       postalCode: '53292',
@@ -43,7 +43,7 @@ export const PEOPLE = [
     entity: 'PEARLESSA',
     birthDate: '30/11/1951',
     email: 'Phyllis.Donovan@PEARLESSA.com',
-    phone: '0685230125',
+    phone: '+33685230125',
     address: {
       street: 'Oakland Place',
       postalCode: '40863',
@@ -61,7 +61,7 @@ export const PEOPLE = [
     entity: 'CIRCUM',
     birthDate: '19/03/1962',
     email: 'Erika.Guzman@CIRCUM.com',
-    phone: '0678412587',
+    phone: '+33678412587',
     address: {
       street: 'Havemeyer Street',
       postalCode: '76154',
@@ -79,7 +79,7 @@ export const PEOPLE = [
     entity: 'TRIPSCH',
     birthDate: '15/04/1971',
     email: 'Moody.Prince@TRIPSCH.com',
-    phone: '0662589632',
+    phone: '+33662589632',
     address: {
       street: 'Russell Street',
       postalCode: '51004',
@@ -97,7 +97,7 @@ export const PEOPLE = [
     entity: 'QUINTITY',
     birthDate: '20/07/1947',
     email: 'Mercedes.Hebert@QUINTITY.com',
-    phone: '0125878522',
+    phone: '+33125878522',
     address: {
       street: 'Laurel Avenue',
       postalCode: '85752',
@@ -115,7 +115,7 @@ export const PEOPLE = [
     entity: 'KRAG',
     birthDate: '18/07/1979',
     email: 'Howell.Mcknight@KRAG.com',
-    phone: '0456987425',
+    phone: '+33456987425',
     address: {
       street: 'Ford Street',
       postalCode: '58545',
@@ -133,7 +133,7 @@ export const PEOPLE = [
     entity: 'NSPIRE',
     birthDate: '15/11/1981',
     email: 'Lizzie.Morris@NSPIRE.com',
-    phone: '0662259988',
+    phone: '+33662259988',
     address: {
       street: 'Hall Street',
       postalCode: '27946',
@@ -151,7 +151,7 @@ export const PEOPLE = [
     entity: 'QNEKT',
     birthDate: '21/10/1951',
     email: 'Roy.Nielsen@QNEKT.com',
-    phone: '0755669551',
+    phone: '+33755669551',
     address: {
       street: 'Sumner Place',
       postalCode: '36335',
@@ -169,7 +169,7 @@ export const PEOPLE = [
     entity: 'UTARA',
     birthDate: '19/03/1973',
     email: 'Mclaughlin.Cochran@undefined.com',
-    phone: '0266334856',
+    phone: '+33266334856',
     address: {
       street: 'Jewel Street',
       postalCode: '61400',
