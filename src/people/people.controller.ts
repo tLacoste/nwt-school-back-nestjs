@@ -1,8 +1,9 @@
-import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseInterceptors } from '@nestjs/common';
 import { Person } from './interfaces/person.interface';
 import { PeopleService } from './people.service';
 import { PeopleInterceptor } from './interceptors/people.interceptor';
 import { Observable } from 'rxjs';
+import { CreatePersonDto } from './dto/create-person.dto';
 
 @Controller('people')
 @UseInterceptors(PeopleInterceptor)
@@ -42,5 +43,17 @@ export class PeopleController {
   @Get(':id')
   findOne(@Param('id') id: string): Observable<Person> {
     return this._peopleService.findOne(id);
+  }
+
+  /**
+   * Handler to answer to /people route
+   *
+   * @param createPersonDto
+   *
+   * @returns Observable<Person>
+   */
+  @Post()
+  create(@Body() createPersonDto: CreatePersonDto): Observable<Person> {
+    return this._peopleService.create(createPersonDto);
   }
 }
