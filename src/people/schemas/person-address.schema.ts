@@ -1,7 +1,6 @@
-import { Document } from "mongoose";
 import { Prop } from '@nestjs/mongoose';
 
-export class PersonAddress extends Document {
+export class PersonAddress {
   @Prop({
     type: String,
     required: true,
