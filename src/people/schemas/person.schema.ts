@@ -1,5 +1,5 @@
-import { Document } from 'mongoose';
-import { Prop, Schema } from '@nestjs/mongoose';
+import mongoose, { Document } from 'mongoose';
+import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ toJSON: { virtuals: true }, versionKey: false })
 export class Person extends Document {
@@ -53,5 +53,40 @@ export class Person extends Document {
   })
   phone: string;
 
+  @Prop(raw({
+    street: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    postalCode: {
+      type: Number,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  }))
+  address: Record<string, any>;
 
+  @Prop({
+    type: Boolean,
+    required: true,
+  })
+  isManager: boolean;
+
+  @Prop({
+    type: String,
+    trim: true,
+  })
+  manager: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+  })
+  managerId: string;
 }
+
+export const PersonSchema = SchemaFactory.createForClass(Person);
