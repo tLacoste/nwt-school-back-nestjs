@@ -50,7 +50,7 @@ export class PeopleDao {
    *
    * @return {Observable<Person>}
    */
-  create(person: CreatePersonDto): Observable<Person> {
+  save(person: CreatePersonDto): Observable<Person> {
     return from(new this._personModel(person).save())
       .pipe(
         map((doc: MongooseDocument) => doc.toJSON()),
