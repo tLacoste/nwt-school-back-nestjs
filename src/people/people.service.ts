@@ -1,8 +1,6 @@
 import { ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
-import { from, Observable, of, throwError } from 'rxjs';
-import { Person } from './interfaces/person.interface';
-import { catchError, findIndex, map, mergeMap, tap } from 'rxjs/operators';
-import { PEOPLE } from '../data/people';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { PersonEntity } from './entities/person.entity';
@@ -10,18 +8,12 @@ import { PeopleDao } from './dao/people.dao';
 
 @Injectable()
 export class PeopleService {
-  // private property to store all people
-  private _people: Person[];
-
   /**
    * Class constructor
    *
    * @param {PeopleDao} _peopleDao instance of the DAO
    */
   constructor(private readonly _peopleDao: PeopleDao) {
-    this._people = [].concat(PEOPLE).map(person => Object.assign(person, {
-      birthDate: this._parseDate(person.birthDate),
-    }));
   }
 
   /**
@@ -124,29 +116,13 @@ export class PeopleService {
    * @returns {Observable<void>}
    */
   delete(id: string): Observable<void> {
-    return this._findPeopleIndexOfList(id)
+    return this._peopleDao.findByIdAndRemove(id)
       .pipe(
-        tap(_ => this._people.splice(_, 1)),
-        map(() => undefined),
-      );
-  }
-
-  /**
-   * Finds index of array for current person
-   *
-   * @param {string} id of the person to find
-   *
-   * @returns {Observable<number>}
-   *
-   * @private
-   */
-  private _findPeopleIndexOfList(id: string): Observable<number> {
-    return from(this._people)
-      .pipe(
-        findIndex(_ => _.id === id),
-        mergeMap(_ => _ > -1 ?
-          of(_) :
-          throwError(new NotFoundException(`People with id '${id}' not found`)),
+        catchError(e => throwError(new NotFoundException(e.message))),
+        mergeMap(_ =>
+          !!_ ?
+            of(undefined) :
+            throwError(new NotFoundException(`Person with id '${id}' not found`)),
         ),
       );
   }

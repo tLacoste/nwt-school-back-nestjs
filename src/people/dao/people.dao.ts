@@ -71,4 +71,18 @@ export class PeopleDao {
         map((doc: MongooseDocument) => !!doc ? doc.toJSON() : undefined),
       );
   }
+
+  /**
+   * Delete a person in people list
+   *
+   * @param {string} id
+   *
+   * @return {Observable<Person | void>}
+   */
+  findByIdAndRemove(id: string): Observable<Person | void> {
+    return from(this._personModel.findByIdAndRemove(id))
+      .pipe(
+        map((doc: MongooseDocument) => !!doc ? doc.toJSON() : undefined),
+      );
+  }
 }
