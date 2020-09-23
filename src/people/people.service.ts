@@ -78,7 +78,7 @@ export class PeopleService {
   create(person: CreatePersonDto): Observable<PersonEntity> {
     return this._addPerson(person)
       .pipe(
-        mergeMap(_ => this._peopleDao.create(_)),
+        mergeMap(_ => this._peopleDao.save(_)),
         catchError(e =>
           e.code === 11000 ?
             throwError(
