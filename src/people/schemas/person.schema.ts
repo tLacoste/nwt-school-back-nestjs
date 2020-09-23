@@ -1,5 +1,6 @@
-import mongoose, { Document } from 'mongoose';
+import { Document } from 'mongoose';
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 
 @Schema({ toJSON: { virtuals: true }, versionKey: false })
 export class Person extends Document {
