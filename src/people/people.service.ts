@@ -32,8 +32,6 @@ export class PeopleService {
   findAll(): Observable<PersonEntity[] | void> {
     return this._peopleDao.find()
       .pipe(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         map(_ => !!_ ? _.map(__ => new PersonEntity(__)) : undefined),
       );
   }
