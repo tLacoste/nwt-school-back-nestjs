@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CreatePersonDto } from '../dto/create-person.dto';
+import { UpdatePersonDto } from '../dto/update-person.dto';
 
 @Injectable()
 export class PeopleDao {
@@ -53,6 +54,21 @@ export class PeopleDao {
     return from(new this._personModel(person).save())
       .pipe(
         map((doc: MongooseDocument) => doc.toJSON()),
+      );
+  }
+
+  /**
+   * Update a person in people list
+   *
+   * @param {string} id
+   * @param {UpdatePersonDto} person
+   *
+   * @return {Observable<Person | void>}
+   */
+  findByIdAndUpdate(id: string, person: UpdatePersonDto): Observable<Person | void> {
+    return from(this._personModel.findByIdAndUpdate(id, person, { new: true, runValidators: true }))
+      .pipe(
+        map((doc: MongooseDocument) => !!doc ? doc.toJSON() : undefined),
       );
   }
 }

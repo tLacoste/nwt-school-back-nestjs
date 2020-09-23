@@ -99,10 +99,20 @@ export class PeopleService {
    * @returns {Observable<PersonEntity>}
    */
   update(id: string, person: UpdatePersonDto): Observable<PersonEntity> {
-    return this._findPeopleIndexOfList(id)
+    return this._peopleDao.findByIdAndUpdate(id, person)
       .pipe(
-        tap(_ => Object.assign(this._people[ _ ], person)),
-        map(_ => new PersonEntity(this._people[ _ ])),
+        catchError(e =>
+          e.code === 11000 ?
+            throwError(
+              new ConflictException(`People with lastname '${person.lastname}' and firstname '${person.firstname}' already exists`),
+            ) :
+            throwError(new UnprocessableEntityException(e.message)),
+        ),
+        mergeMap(_ =>
+          !!_ ?
+            of(new PersonEntity(_)) :
+            throwError(new NotFoundException(`People with id '${id}' not found`)),
+        ),
       );
   }
 
