@@ -6,6 +6,7 @@ import { PEOPLE } from '../data/people';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { PersonEntity } from './entities/person.entity';
+import { PeopleDao } from './dao/people.dao';
 
 @Injectable()
 export class PeopleService {
@@ -14,8 +15,10 @@ export class PeopleService {
 
   /**
    * Class constructor
+   *
+   * @param {PeopleDao} _peopleDao instance of the DAO
    */
-  constructor() {
+  constructor(private readonly _peopleDao: PeopleDao) {
     this._people = [].concat(PEOPLE).map(person => Object.assign(person, {
       birthDate: this._parseDate(person.birthDate),
     }));
@@ -27,9 +30,11 @@ export class PeopleService {
    * @returns {Observable<PersonEntity[] | void>}
    */
   findAll(): Observable<PersonEntity[] | void> {
-    return of(this._people)
+    return this._peopleDao.find()
       .pipe(
-        map(_ => (!!_ && !!_.length) ? _.map(__ => new PersonEntity(__)) : undefined),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        map(_ => !!_ ? _.map(__ => new PersonEntity(__)) : undefined),
       );
   }
 
