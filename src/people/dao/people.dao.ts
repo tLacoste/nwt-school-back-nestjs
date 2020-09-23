@@ -26,4 +26,18 @@ export class PeopleDao {
         map((docs: MongooseDocument[]) => (!!docs && docs.length > 0) ? docs.map(_ => _.toJSON()) : undefined),
       );
   }
+
+  /**
+   * Returns one person of the list matching id in parameter
+   *
+   * @param {string} id of the person in the db
+   *
+   * @return {Observable<Person | void>}
+   */
+  findById(id: string): Observable<Person | void> {
+    return from(this._personModel.findById(id))
+      .pipe(
+        map((doc: MongooseDocument) => !!doc ? doc.toJSON() : undefined),
+      );
+  }
 }

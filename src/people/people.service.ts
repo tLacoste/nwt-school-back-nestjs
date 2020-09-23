@@ -1,7 +1,7 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { from, Observable, of, throwError } from 'rxjs';
 import { Person } from './interfaces/person.interface';
-import { find, findIndex, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, find, findIndex, map, mergeMap, tap } from 'rxjs/operators';
 import { PEOPLE } from '../data/people';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
@@ -42,8 +42,9 @@ export class PeopleService {
    * @returns {Observable<PersonEntity | void>}
    */
   findRandom(): Observable<PersonEntity | void> {
-    return of(this._people[ Math.round(Math.random() * this._people.length) ])
+    return this._peopleDao.find()
       .pipe(
+        map(_ => !!_ ? _[ Math.round(Math.random() * _.length) ] : undefined),
         map(_ => !!_ ? new PersonEntity(_) : undefined),
       );
   }
@@ -56,9 +57,9 @@ export class PeopleService {
    * @returns {Observable<PersonEntity>}
    */
   findOne(id: string): Observable<PersonEntity> {
-    return from(this._people)
+    return this._peopleDao.findById(id)
       .pipe(
-        find(_ => _.id === id),
+        catchError(e => throwError(new UnprocessableEntityException(e.message))),
         mergeMap(_ =>
           !!_ ?
             of(new PersonEntity(_)) :

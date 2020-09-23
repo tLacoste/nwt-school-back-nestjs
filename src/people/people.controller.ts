@@ -25,7 +25,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
-  ApiTags,
+  ApiTags, ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
 @ApiTags('people')
@@ -74,6 +74,7 @@ export class PeopleController {
   @ApiOkResponse({ description: 'Returns the person for the given "id"', type: PersonEntity })
   @ApiNotFoundResponse({ description: 'Person with the given "id" doesn\'t exist in the database' })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({ description: 'The request can\'t be performed in the database' })
   @ApiParam({
     name: 'id',
     description: 'Unique identifier of the person in the database',
