@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { from, Observable, of, throwError } from 'rxjs';
 import { Person } from './interfaces/person.interface';
-import { catchError, find, findIndex, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, findIndex, map, mergeMap, tap } from 'rxjs/operators';
 import { PEOPLE } from '../data/people';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
@@ -76,17 +76,17 @@ export class PeopleService {
    * @returns {Observable<PersonEntity>}
    */
   create(person: CreatePersonDto): Observable<PersonEntity> {
-    return from(this._people)
+    return this._addPerson(person)
       .pipe(
-        find(_ => _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
-          _.firstname.toLowerCase() === person.firstname.toLowerCase()),
-        mergeMap(_ =>
-          !!_ ?
+        mergeMap(_ => this._peopleDao.create(_)),
+        catchError(e =>
+          e.code === 11000 ?
             throwError(
               new ConflictException(`People with lastname '${person.lastname}' and firstname '${person.firstname}' already exists`),
             ) :
-            this._addPerson(person),
+            throwError(new UnprocessableEntityException(e.message)),
         ),
+        map(_ => new PersonEntity(_)),
       );
   }
 
@@ -146,22 +146,19 @@ export class PeopleService {
    *
    * @param person to add
    *
-   * @returns {Observable<PersonEntity>}
+   * @returns {Observable<CreatePersonDto>}
    *
    * @private
    */
-  private _addPerson(person: CreatePersonDto): Observable<PersonEntity> {
+  private _addPerson(person: CreatePersonDto): Observable<CreatePersonDto> {
     return of(person)
       .pipe(
         map(_ =>
           Object.assign(_, {
-            id: this._createId(),
             birthDate: this._parseDate('20/09/1991'),
             photo: 'https://randomuser.me/api/portraits/lego/6.jpg',
-          }) as Person,
+          }),
         ),
-        tap(_ => this._people = this._people.concat(_)),
-        map(_ => new PersonEntity(_)),
       );
   }
 
@@ -177,16 +174,5 @@ export class PeopleService {
   private _parseDate(date: string): number {
     const dates = date.split('/');
     return (new Date(dates[ 2 ] + '/' + dates[ 1 ] + '/' + dates[ 0 ]).getTime());
-  }
-
-  /**
-   * Creates a new id
-   *
-   * @returns {string}
-   *
-   * @private
-   */
-  private _createId(): string {
-    return `${new Date().getTime()}`;
   }
 }

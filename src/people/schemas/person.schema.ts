@@ -1,7 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PersonAddress } from './person-address.schema';
+import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ toJSON: { virtuals: true }, versionKey: false })
 export class Person extends Document {
@@ -55,8 +54,23 @@ export class Person extends Document {
   })
   phone: string;
 
-  @Prop({ type: PersonAddress })
-  address: PersonAddress;
+  @Prop(raw({
+    street: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    postalCode: {
+      type: Number,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  }))
+  address: any;
 
   @Prop({
     type: Boolean,
