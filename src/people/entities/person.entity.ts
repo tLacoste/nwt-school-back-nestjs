@@ -46,7 +46,7 @@ export class PersonEntity {
 
   @ApiProperty({ name: 'address', description: 'Address' })
   @Expose()
-  // @Type(() => PersonAddressEntity)
+  @Type(() => PersonAddressEntity)
   address: PersonAddressEntity;
 
   @ApiProperty({ name: 'isManager', description: 'Flag to know if this person is a manager', example: false })
