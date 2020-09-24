@@ -113,6 +113,7 @@ export class PeopleController {
    */
   @ApiOkResponse({ description: 'The person has been successfully updated', type: PersonEntity })
   @ApiNotFoundResponse({ description: 'Person with the given "id" doesn\'t exist in the database' })
+  @ApiConflictResponse({ description: 'The person already exists in the database' })
   @ApiBadRequestResponse({ description: 'Parameter and/or payload provided are not good' })
   @ApiParam({
     name: 'id',
