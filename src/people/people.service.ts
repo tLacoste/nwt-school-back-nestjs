@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { from, Observable, of, throwError } from 'rxjs';
 import { Person } from './interfaces/person.interface';
-import { catchError, findIndex, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, find, findIndex, map, mergeMap, tap } from 'rxjs/operators';
 import { PEOPLE } from '../data/people';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
@@ -99,8 +99,17 @@ export class PeopleService {
    * @returns {Observable<PersonEntity>}
    */
   update(id: string, person: UpdatePersonDto): Observable<PersonEntity> {
-    return this._findPeopleIndexOfList(id)
+    return from(this._people)
       .pipe(
+        find(_ => _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
+          _.firstname.toLowerCase() === person.firstname.toLowerCase()),
+        mergeMap(_ =>
+          !!_ ?
+            throwError(
+              new ConflictException(`People with lastname '${person.lastname}' and firstname '${person.firstname}' already exists`),
+            ) :
+            this._findPeopleIndexOfList(id),
+        ),
         tap(_ => Object.assign(this._people[ _ ], person)),
         map(_ => new PersonEntity(this._people[ _ ])),
       );
