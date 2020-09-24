@@ -94,8 +94,17 @@ export class PeopleService {
    * @returns {Observable<Person>}
    */
   update(id: string, person: UpdatePersonDto): Observable<Person> {
-    return this._findPeopleIndexOfList(id)
+    return from(this._people)
       .pipe(
+        find(_ => _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
+          _.firstname.toLowerCase() === person.firstname.toLowerCase()),
+        mergeMap(_ =>
+          !!_ ?
+            throwError(
+              new ConflictException(`People with lastname '${person.lastname}' and firstname '${person.firstname}' already exists`),
+            ) :
+            this._findPeopleIndexOfList(id),
+        ),
         tap(_ => Object.assign(this._people[ _ ], person)),
         map(_ => this._people[ _ ]),
       );
