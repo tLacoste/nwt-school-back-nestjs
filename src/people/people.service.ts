@@ -102,7 +102,8 @@ export class PeopleService {
     return from(this._people)
       .pipe(
         find(_ => _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
-          _.firstname.toLowerCase() === person.firstname.toLowerCase()),
+          _.firstname.toLowerCase() === person.firstname.toLowerCase() &&
+          _.id.toLowerCase() !== id.toLowerCase()),
         mergeMap(_ =>
           !!_ ?
             throwError(
