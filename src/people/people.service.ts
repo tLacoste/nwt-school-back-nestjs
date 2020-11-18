@@ -108,7 +108,7 @@ export class PeopleService {
             this._findPeopleIndexOfList(id),
         ),
         tap(_ => Object.assign(this._people[ _ ], person)),
-        map(_ => this._people[ _ ]),
+        map(_ => new PersonEntity(this._people[ _ ])),
       );
   }
 
