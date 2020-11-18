@@ -3,15 +3,13 @@ import { IsBoolean, IsEmail, IsInstance, IsNotEmpty, IsOptional, IsPhoneNumber, 
 import { Type } from 'class-transformer';
 
 export class UpdatePersonDto {
-  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  firstname?: string;
+  firstname: string;
 
-  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  lastname?: string;
+  lastname: string;
 
   @IsOptional()
   @IsString()
