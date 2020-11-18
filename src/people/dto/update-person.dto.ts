@@ -1,8 +1,8 @@
 import { PersonAddressDto } from './person-address.dto';
 
 export class UpdatePersonDto {
-  readonly firstname?: string;
-  readonly lastname?: string;
+  readonly firstname: string;
+  readonly lastname: string;
   readonly entity?: string;
   readonly email?: string;
   readonly phone?: string;
