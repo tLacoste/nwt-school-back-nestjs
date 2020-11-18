@@ -94,7 +94,7 @@ export class PeopleService {
    *
    * @returns {Observable<PersonEntity>}
    */
-  update(id: string, person: UpdatePersonDto): Observable<Person> {
+  update(id: string, person: UpdatePersonDto): Observable<PersonEntity> {
     return from(this._people)
       .pipe(
         find(_ => _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
