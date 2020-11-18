@@ -2,7 +2,7 @@ import { PersonAddressDto } from './person-address.dto';
 import {
   IsBoolean,
   IsEmail,
-  IsInstance, IsMongoId,
+  IsInstance,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
@@ -10,20 +10,18 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdatePersonDto {
-  @ApiPropertyOptional({ name: 'firstname', description: 'Firstname', example: 'Mclaughlin' })
-  @IsOptional()
+  @ApiProperty({ name: 'firstname', description: 'Firstname', example: 'Mclaughlin' })
   @IsString()
   @IsNotEmpty()
-  firstname?: string;
+  firstname: string;
 
-  @ApiPropertyOptional({ name: 'lastname', description: 'Lastname', example: 'Cochran' })
-  @IsOptional()
+  @ApiProperty({ name: 'lastname', description: 'Lastname', example: 'Cochran' })
   @IsString()
   @IsNotEmpty()
-  lastname?: string;
+  lastname: string;
 
   @ApiPropertyOptional({ name: 'entity', description: 'Entity where person works', example: 'UTARA' })
   @IsOptional()
@@ -65,7 +63,7 @@ export class UpdatePersonDto {
     example: '5763cd4dc378a38ecd387737',
   })
   @IsOptional()
-  @IsMongoId()
+  @IsString()
   @IsNotEmpty()
   managerId?: string;
 }
