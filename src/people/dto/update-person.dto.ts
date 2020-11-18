@@ -10,20 +10,18 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdatePersonDto {
-  @ApiPropertyOptional({ name: 'firstname', description: 'Firstname', example: 'Mclaughlin' })
-  @IsOptional()
+  @ApiProperty({ name: 'firstname', description: 'Firstname', example: 'Mclaughlin' })
   @IsString()
   @IsNotEmpty()
-  firstname?: string;
+  firstname: string;
 
-  @ApiPropertyOptional({ name: 'lastname', description: 'Lastname', example: 'Cochran' })
-  @IsOptional()
+  @ApiProperty({ name: 'lastname', description: 'Lastname', example: 'Cochran' })
   @IsString()
   @IsNotEmpty()
-  lastname?: string;
+  lastname: string;
 
   @ApiPropertyOptional({ name: 'entity', description: 'Entity where person works', example: 'UTARA' })
   @IsOptional()
