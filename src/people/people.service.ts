@@ -94,7 +94,7 @@ export class PeopleService {
    *
    * @returns {Observable<PersonEntity>}
    */
-  update(id: string, person: UpdatePersonDto): Observable<Person> {
+  update(id: string, person: UpdatePersonDto): Observable<PersonEntity> {
     return from(this._people)
       .pipe(
         find(_ => _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
@@ -108,7 +108,7 @@ export class PeopleService {
             this._findPeopleIndexOfList(id),
         ),
         tap(_ => Object.assign(this._people[ _ ], person)),
-        map(_ => this._people[ _ ]),
+        map(_ => new PersonEntity(this._people[ _ ])),
       );
   }
 
