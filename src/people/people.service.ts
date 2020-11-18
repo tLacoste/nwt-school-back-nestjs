@@ -118,7 +118,7 @@ export class PeopleService {
   delete(id: string): Observable<void> {
     return this._peopleDao.findByIdAndRemove(id)
       .pipe(
-        catchError(e => throwError(new NotFoundException(e.message))),
+        catchError(e => throwError(new UnprocessableEntityException(e.message))),
         mergeMap(_ =>
           !!_ ?
             of(undefined) :
